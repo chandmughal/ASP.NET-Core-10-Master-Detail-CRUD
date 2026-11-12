@@ -1,0 +1,36 @@
+@model StudentViewModel
+<form asp-action="@(Model.Id == 0 ? "Create" : "Edit")" asp-route-id="@Model.Id" method="post">
+<input asp-for="Id" type="hidden" /><div asp-validation-summary="ModelOnly" class="validation"></div>
+<div class="field"><label asp-for="Name"></label><input asp-for="Name" /><span asp-validation-for="Name" class="validation"></span></div>
+<div class="field"><label asp-for="Gender"></label><select asp-for="Gender"><option value="">-- Select gender --</option><option>Male</option><option>Female</option><option>Other</option></select><span asp-validation-for="Gender" class="validation"></span></div>
+<h2>Marks detail</h2>
+<table><thead><tr><th>Exam</th><th>Marks (0-100)</th><th></th></tr></thead><tbody id="marksBody">
+@for (var i = 0; i < Model.Marks.Count; i++) {
+<tr><td><input asp-for="Marks[i].Id" type="hidden" /><input asp-for="Marks[i].Exam" /><span asp-validation-for="Marks[i].Exam" class="validation"></span></td>
+<td><input asp-for="Marks[i].MarksObtained" type="number" min="0" max="100" step="0.01" /><span asp-validation-for="Marks[i].MarksObtained" class="validation"></span></td>
+<td><button type="button" class="secondary" onclick="removeRow(this)">Remove</button></td></tr>
+}
+</tbody></table>
+<div class="actions"><button type="button" class="secondary" onclick="addRow()">Add exam</button><button type="submit">Save</button><a asp-action="Index">Cancel</a></div>
+</form>
+@section Scripts {
+<script>
+function reindexRows() {
+ document.querySelectorAll("#marksBody tr").forEach((row, i) => {
+  row.querySelectorAll("input").forEach(input => {
+   input.name = input.name.replace(/Marks\[\d+\]/, "Marks[" + i + "]");
+   input.id = input.id.replace(/Marks_\d+__/, "Marks_" + i + "__");
+  });
+ });
+}
+function addRow() {
+ const i = document.querySelectorAll("#marksBody tr").length;
+ const row = document.createElement("tr");
+ row.innerHTML = '<td><input type="hidden" name="Marks[' + i + '].Id" value="0"><input name="Marks[' + i + '].Exam"></td>' +
+ '<td><input name="Marks[' + i + '].MarksObtained" type="number" min="0" max="100" step="0.01" value="0"></td>' +
+ '<td><button type="button" class="secondary" onclick="removeRow(this)">Remove</button></td>';
+ document.getElementById("marksBody").appendChild(row);
+}
+function removeRow(button) { button.closest("tr").remove(); reindexRows(); }
+</script>
+}
