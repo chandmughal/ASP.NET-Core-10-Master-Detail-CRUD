@@ -1,0 +1,13 @@
+@model IEnumerable<Student>
+@{ ViewData["Title"] = "Students"; }
+<div class="page-heading"><h1>Students</h1><a class="btn" asp-action="Create">Add student</a></div>
+@if (!Model.Any()) { <p>No students found. Click "Add student" to begin.</p> }
+else { foreach (var student in Model) {
+<section class="student-card"><div class="page-heading"><div><h2>@student.Name</h2><span>Gender: @student.Gender</span></div>
+<div class="actions"><a asp-action="Edit" asp-route-id="@student.Id">Edit</a>
+<form asp-action="Delete" asp-route-id="@student.Id" method="post" onsubmit="return confirm('Delete this student and all marks?');">
+<button class="link-button danger" type="submit">Delete</button></form></div></div>
+<table><thead><tr><th>Exam</th><th>Marks obtained</th></tr></thead><tbody>
+@foreach (var mark in student.Marks) { <tr><td>@mark.Exam</td><td>@mark.MarksObtained</td></tr> }
+</tbody></table></section>
+} }
