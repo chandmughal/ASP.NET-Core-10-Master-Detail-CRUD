@@ -1,0 +1,1 @@
+# ASP.NET-Core-10-Master-Detail-CRUD
